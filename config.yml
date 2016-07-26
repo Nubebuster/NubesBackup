@@ -1,0 +1,9 @@
+#24 hours ~ set to -1 to disable automatic backups
+delay: 86400000
+#3 days ~ set to -1 to disable
+deleteifolderthan: 259200000
+#you may use subfolders like 'plugins/Essentials'
+backuplist:
+ - world
+ - plugins
+ - ops.json

@@ -1,0 +1,7 @@
+author: NubeBuster
+version: 1.0
+name: NubesBackup
+main: com.nubebuster.backup.Backup
+commands:
+  backup:
+  reloadbackup:
