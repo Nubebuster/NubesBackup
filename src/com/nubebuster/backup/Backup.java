@@ -25,7 +25,7 @@ public class Backup extends JavaPlugin {
 	private static Backup inst;
 	private static FileConfiguration config;
 
-	private long lastBackup, backupdelay;
+	private long lastBackup, backupdelay = -1, maxAge = -1;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -34,11 +34,44 @@ public class Backup extends JavaPlugin {
 		configs();
 		if (config.isSet("lastbackup"))
 			lastBackup = config.getLong("lastbackup");
-		if (config.isSet("delay"))
-			backupdelay = config.getLong("delay");
-		else {
-			backupdelay = 86400000;
-			System.out.println("'delay' is not set in the config, setting to 24 hours...");
+		if (config.isSet("delay")) {
+			String del = config.getString("delay");
+			String[] data = del.split(":");
+			if (data.length == 4) {
+				try {
+					long delay = 0;
+					delay += Integer.parseInt(data[0]) * 86400000;
+					delay += Integer.parseInt(data[1]) * 3600000;
+					delay += Integer.parseInt(data[2]) * 60000;
+					delay += Integer.parseInt(data[3]) * 1000;
+					backupdelay = delay;
+				} catch (NumberFormatException e) {
+					System.err.println("'delay' in the config is not in the right format! (dd:HH:mm:ss)");
+				}
+			} else {
+				if (!del.equals("disabled")) {
+					backupdelay = 86400000;
+					System.out.println("'delay' is not correctly set in the config, setting to 24 hours...");
+				}
+			}
+		}
+		if (config.isSet("deleteifoldarthan")) {
+			String del = config.getString("deleteifoldarthan");
+			String[] data = del.split(":");
+			if (data.length == 4) {
+				try {
+					long delay = 0;
+					delay += Integer.parseInt(data[0]) * 86400000;
+					delay += Integer.parseInt(data[1]) * 3600000;
+					delay += Integer.parseInt(data[2]) * 60000;
+					delay += Integer.parseInt(data[3]) * 1000;
+					backupdelay = delay;
+				} catch (NumberFormatException e) {
+					System.err.println("'deleteifoldarthan' in the config is not in the right format! (dd:HH:mm:ss)");
+				}
+			} else if (!del.equals("disabled")) {
+				System.err.println("'deleteifoldarthan' in the config is not in the right format! (dd:HH:mm:ss)");
+			}
 		}
 
 		if (backupdelay != -1) {
@@ -116,10 +149,10 @@ public class Backup extends JavaPlugin {
 		}
 		zos.close();
 		fos.close();
-		if (config.isSet("deleteifolderthan") && config.getLong("deleteifolderthan") > 0) {
+		if (maxAge > 0) {
 			System.out.println("Removing old backups");
 			for (File f : backupFolder.listFiles())
-				if (System.currentTimeMillis() - f.lastModified() > config.getLong("deleteifolderthan"))
+				if (System.currentTimeMillis() - f.lastModified() > maxAge)
 					f.delete();
 		}
 	}
@@ -174,8 +207,8 @@ public class Backup extends JavaPlugin {
 	}
 
 	private void configs() {
-		config = getConfig();
 		saveDefaultConfig();
+		config = getConfig();
 		if (config.getBoolean("rewriteconfig")) {
 			File file = new File(getDataFolder() + File.separator + "config.yml");
 			file.delete();

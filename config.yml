@@ -1,7 +1,7 @@
-#24 hours ~ set to -1 to disable automatic backups
-delay: 86400000
-#3 days ~ set to -1 to disable
-deleteifolderthan: 259200000
+#24 hours ~ set to 'disabled' to disable automatic backups
+delay: 01:00:00:00
+#3 days ~ set to 'disabled' to disable old backup deletion
+deleteifolderthan: 03:00:00:00
 #you may use subfolders like 'plugins/Essentials'
 backuplist:
  - world
