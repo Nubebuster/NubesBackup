@@ -2,8 +2,26 @@
 delay: 01:00:00:00
 #3 days ~ set to 'disabled' to disable old backup deletion
 deleteifolderthan: 03:00:00:00
+#the commands are executed before the files are backed up
+commands:
+ enable: false
+ windows:
+  - 'rmdir mysqldumps /s /q'
+  - 'mkdir mysqldumps'
+  - '"C:\Program Files\MySQL\MySQL Workbench 8.0\mysqldump.exe" -uUsername -pPassword
+    database > "mysqldumps\%date%.sql" --column-statistics=0'
+ linux:
+  - 'rm mysqldumps -R'
+  - 'mkdir mysqldumps'
+  - 'sudo mysqldump -uUsername -pPassword database > "mysqldumps/%date%.sql"'
 #you may use subfolders like 'plugins/Essentials'
 backuplist:
- - world
+ - mysqldumps
+ - bukkit.yml
+ - paper.yml
+ - server.properties
  - plugins
- - ops.json
+ - world
+ - world_nether
+ - world_the_end
+excludeextensions: [.lock, .jar]
