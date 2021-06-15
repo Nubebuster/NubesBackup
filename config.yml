@@ -24,4 +24,4 @@ backuplist:
  - world
  - world_nether
  - world_the_end
-excludeextensions: [.lock, .jar]
+exclude-extensions: [.lock, .jar]

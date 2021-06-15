@@ -4,8 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.SystemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -164,12 +162,13 @@ public class NubesBackup extends JavaPlugin {
                             files.add(f);
                     }
 
-                    List<String> excludeExtensions = config.getStringList("excludeexcensions");
+                    List<String> excludeExtensions = config.getStringList("exclude-extensions");
+                    files:
                     for (File f : files) {
                         if (f.length() == 0)
                             continue;
                         for (String extension : excludeExtensions)
-                            if (f.getName().endsWith(extension)) continue;
+                            if (f.getName().endsWith(extension)) continue files;
                         try {
                             FileInputStream fis = new FileInputStream(f);
                             ZipEntry zipEntry = new ZipEntry(f.getPath());
@@ -186,7 +185,9 @@ public class NubesBackup extends JavaPlugin {
                             System.out.println("Could not backup " + f.getName() + "!");
                         }
                     }
+                    zos.flush();
                     zos.close();
+                    fos.flush();
                     fos.close();
 
                     if (callBack != null) {
