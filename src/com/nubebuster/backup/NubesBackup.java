@@ -31,48 +31,6 @@ public class NubesBackup extends JavaPlugin {
     public void onEnable() {
         inst = this;
         configs();
-        if (config.isSet("lastbackup"))
-            lastBackup = config.getLong("lastbackup");
-        if (config.isSet("delay")) {
-            String del = config.getString("delay");
-            String[] data = del.split(":");
-            if (data.length == 4) {
-                try {
-                    long delay = 0;
-                    delay += Integer.parseInt(data[0]) * 86400000;
-                    delay += Integer.parseInt(data[1]) * 3600000;
-                    delay += Integer.parseInt(data[2]) * 60000;
-                    delay += Integer.parseInt(data[3]) * 1000;
-                    backupdelay = delay;
-                } catch (NumberFormatException e) {
-                    System.err.println("'delay' in the config is not in the right format! (dd:HH:mm:ss)");
-                }
-            } else {
-                if (!del.equals("disabled")) {
-                    backupdelay = 86400000;
-                    System.out.println("'delay' is not correctly set in the config, setting to 24 hours...");
-                }
-            }
-        }
-        if (config.isSet("deleteifoldarthan")) {
-            String del = config.getString("deleteifoldarthan");
-            String[] data = del.split(":");
-            if (data.length == 4) {
-                try {
-                    long delay = 0;
-                    delay += Integer.parseInt(data[0]) * 86400000;
-                    delay += Integer.parseInt(data[1]) * 3600000;
-                    delay += Integer.parseInt(data[2]) * 60000;
-                    delay += Integer.parseInt(data[3]) * 1000;
-                    backupdelay = delay;
-                } catch (NumberFormatException e) {
-                    System.err.println("'deleteifoldarthan' in the config is not in the right format! (dd:HH:mm:ss)");
-                }
-            } else if (!del.equals("disabled")) {
-                System.err.println("'deleteifoldarthan' in the config is not in the right format! (dd:HH:mm:ss)");
-            }
-        }
-
         if (backupdelay != -1) {
             if (lastBackup - System.currentTimeMillis() > backupdelay)
                 Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
@@ -259,6 +217,48 @@ public class NubesBackup extends JavaPlugin {
             File file = new File(getDataFolder() + File.separator + "config.yml");
             file.delete();
             saveDefaultConfig();
+        }
+
+        if (config.isSet("lastbackup"))
+            lastBackup = config.getLong("lastbackup");
+        if (config.isSet("delay")) {
+            String del = config.getString("delay");
+            String[] data = del.split(":");
+            if (data.length == 4) {
+                try {
+                    long delay = 0;
+                    delay += Integer.parseInt(data[0]) * 86400000;
+                    delay += Integer.parseInt(data[1]) * 3600000;
+                    delay += Integer.parseInt(data[2]) * 60000;
+                    delay += Integer.parseInt(data[3]) * 1000;
+                    backupdelay = delay;
+                } catch (NumberFormatException e) {
+                    System.err.println("'delay' in the config is not in the right format! (dd:HH:mm:ss)");
+                }
+            } else {
+                if (!del.equals("disabled")) {
+                    backupdelay = 86400000;
+                    System.out.println("'delay' is not correctly set in the config, setting to 24 hours...");
+                }
+            }
+        }
+        if (config.isSet("deleteifoldarthan")) {
+            String del = config.getString("deleteifoldarthan");
+            String[] data = del.split(":");
+            if (data.length == 4) {
+                try {
+                    long delay = 0;
+                    delay += Integer.parseInt(data[0]) * 86400000;
+                    delay += Integer.parseInt(data[1]) * 3600000;
+                    delay += Integer.parseInt(data[2]) * 60000;
+                    delay += Integer.parseInt(data[3]) * 1000;
+                    backupdelay = delay;
+                } catch (NumberFormatException e) {
+                    System.err.println("'deleteifoldarthan' in the config is not in the right format! (dd:HH:mm:ss)");
+                }
+            } else if (!del.equals("disabled")) {
+                System.err.println("'deleteifoldarthan' in the config is not in the right format! (dd:HH:mm:ss)");
+            }
         }
     }
 }
