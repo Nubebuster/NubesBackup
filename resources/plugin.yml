@@ -1,5 +1,5 @@
 author: NubeBuster
-version: 1.2
+version: 2.1
 name: NubesBackup
 main: com.nubebuster.backup.NubesBackup
 commands:
