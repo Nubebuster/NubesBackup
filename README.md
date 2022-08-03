@@ -26,3 +26,5 @@ For /backup
 - nubesbackup.backup
 For /backupreload
 - nubesbackup.reload
+
+If you have a network it is recommended to have the backup script for mysql only run on your hub server because it's not necessary to backup the mysql database on all backend servers.
