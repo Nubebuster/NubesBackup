@@ -33,25 +33,21 @@ public class NubesBackup extends JavaPlugin {
         configs();
         if (backupdelay != -1) {
             if (lastBackup - System.currentTimeMillis() > backupdelay)
-                Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-                    public void run() {
-                        try {
-                            backup(null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            System.out.println("An error ocurred during the backup!");
-                        }
-                    }
-                });
-            long next = (backupdelay - (System.currentTimeMillis() - lastBackup)) / 50;
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-                public void run() {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
                     try {
                         backup(null);
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.out.println("An error ocurred during the backup!");
                     }
+                });
+            long next = (backupdelay - (System.currentTimeMillis() - lastBackup)) / 50;
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                try {
+                    backup(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("An error ocurred during the backup!");
                 }
             }, next > 0 ? next : 40, backupdelay / 50);
         }
@@ -125,8 +121,15 @@ public class NubesBackup extends JavaPlugin {
                     for (File f : files) {
                         if (f.length() == 0)
                             continue;
-                        for (String extension : excludeExtensions)
-                            if (f.getName().endsWith(extension)) continue files;
+                        for (String extension : excludeExtensions) {
+                            if (extension.startsWith(".")) {
+                                if (f.getName().endsWith(extension)) {
+                                    continue files;
+                                }
+                            } else if (f.getName().equals(extension)) {
+                                continue files;
+                            }
+                        }
                         try {
                             FileInputStream fis = new FileInputStream(f);
                             ZipEntry zipEntry = new ZipEntry(f.getPath());

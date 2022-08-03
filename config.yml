@@ -17,9 +17,10 @@ commands:
   - 'sudo mysqldump -uUsername -pPassword database > "mysqldump/%date%.sql"'
 # optional if mysql sometimes bugs out
 #  - 'sudo service mysql restart -uUsername -pPassword'
+
 #you may use subfolders like 'plugins/Essentials'
 backuplist:
- - mysqldumps
+ - mysqldump
  - bukkit.yml
  - paper.yml
  - server.properties
@@ -27,4 +28,4 @@ backuplist:
  - world
  - world_nether
  - world_the_end
-exclude-extensions: [.lock, .jar]
+exclude-extensions: [.lock, .jar, examplefile.zip]
