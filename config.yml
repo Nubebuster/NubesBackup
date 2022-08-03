@@ -11,9 +11,10 @@ commands:
   - '"C:\Program Files\MySQL\MySQL Workbench 8.0\mysqldump.exe" -uUsername -pPassword
     database > "mysqldumps\%date%.sql" --column-statistics=0'
  linux:
-  - 'rm mysqldumps -R'
-  - 'mkdir mysqldumps'
-  - 'sudo mysqldump -uUsername -pPassword database > "mysqldumps/%date%.sql"'
+  - 'rm mysqldumpold -R'
+  - 'mv mysqldump mysqldumpold'
+  - 'mkdir mysqldump'
+  - 'sudo mysqldump -uUsername -pPassword database > "mysqldump/%date%.sql"'
 #you may use subfolders like 'plugins/Essentials'
 backuplist:
  - mysqldumps
